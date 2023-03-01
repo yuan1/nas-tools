@@ -25,6 +25,12 @@ jobs:
         run: |
           app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'v\(.*\)'/\1/gp")
           echo "app_version=$app_version" >> $GITHUB_ENV
+          
+      -
+        name: Copy files
+        id: copy_files
+        run: |
+          ls ./ | grep -v docker | xargs -i cp -r ./{} docker/
 
       -
         name: Set Up QEMU
@@ -48,7 +54,6 @@ jobs:
           file: docker/Dockerfile
           platforms: |
             linux/amd64
-            linux/arm64
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nas-tools:latest
