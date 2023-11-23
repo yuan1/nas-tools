@@ -11,7 +11,6 @@ export class NormalCard extends observeState(CustomElement) {
     tmdb_id: { attribute: "card-tmdbid" },
     res_type: { attribute: "card-restype" },
     media_type: { attribute: "card-mediatype" },
-    show_sub: { attribute: "card-showsub"},
     title: { attribute: "card-title" },
     fav: { attribute: "card-fav" , reflect: true},
     date: { attribute: "card-date" },
@@ -77,39 +76,6 @@ export class NormalCard extends observeState(CustomElement) {
     }
   }
 
-  _render_bottom() {
-    if (this.show_sub == "1") {
-      return html`
-        <div class="d-flex justify-content-between">
-          <a class="text-muted" title="搜索资源" @click=${(e) => { e.stopPropagation() }}
-             href='javascript:media_search("${this.tmdb_id}", "${this.title}", "${this.media_type}")'>
-            <span class="icon-pulse text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24"
-                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                  stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <circle cx="10" cy="10" r="7"></circle>
-                <line x1="21" y1="21" x2="15" y2="15"></line>
-              </svg>
-            </span>
-          </a>
-          <div class="ms-auto">
-            <div class="text-muted" title="加入/取消订阅" style="cursor: pointer" @click=${this._loveClick}>
-              <span class="icon-pulse text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart ${this.fav == "1" ? "icon-filled text-red" : ""}" width="24" height="24"
-                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                    stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
-                </svg>
-              </span>
-            </div>
-          </div>
-        </div>`;
-    } else {
-      return nothing;
-    }
-  }
 
   render() {
     return html`
@@ -154,7 +120,6 @@ export class NormalCard extends observeState(CustomElement) {
               </p>`
             : nothing }
           </div>
-          ${this._render_bottom()}
         </div>
       </div>
     `;
@@ -170,20 +135,6 @@ export class NormalCard extends observeState(CustomElement) {
     };
     this.dispatchEvent(new CustomEvent("fav_change", options));
   }
-
-  _loveClick(e) {
-    e.stopPropagation();
-    Golbal.lit_love_click(this.title, this.year, this.media_type, this.tmdb_id, this.fav,
-      () => {
-        this.fav = "0";
-        this._fav_change();
-      },
-      () => {
-        this.fav = "1";
-        this._fav_change();
-      });
-  }
-  
 }
 
 window.customElements.define("normal-card", NormalCard);

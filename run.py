@@ -37,12 +37,9 @@ from web.main import App
 from app.utils import SystemUtils, ConfigLoadCache
 from app.utils.commons import INSTANCES
 from app.db import init_db, update_db, init_data
-from app.helper import IndexerHelper, DisplayHelper, ChromeHelper
-from app.brushtask import BrushTask
-from app.rsschecker import RssChecker
+from app.helper import DisplayHelper, ChromeHelper
 from app.scheduler import run_scheduler, restart_scheduler
 from app.sync import run_monitor, restart_monitor
-from app.torrentremover import TorrentRemover
 from check_config import update_config, check_config
 from version import APP_VERSION
 
@@ -113,14 +110,6 @@ def start_service():
     run_scheduler()
     # 启动监控服务
     run_monitor()
-    # 启动刷流服务
-    BrushTask()
-    # 启动自定义订阅服务
-    RssChecker()
-    # 启动自动删种服务
-    TorrentRemover()
-    # 加载索引器配置
-    IndexerHelper()
     # 初始化浏览器
     if not is_windows_exe:
         ChromeHelper().init_driver()

@@ -129,56 +129,6 @@ def check_config():
     else:
         print("配置文件格式错误，找不到media配置项！")
 
-    # 检查站点配置
-    if Config().get_config('pt'):
-        pt_client = Config().get_config('pt').get('pt_client')
-        print("下载软件设置为：%s" % pt_client)
-
-        rmt_mode = Config().get_config('pt').get('rmt_mode', 'copy')
-        if rmt_mode == "link":
-            print("默认文件转移模式为：硬链接")
-        elif rmt_mode == "softlink":
-            print("默认文件转移模式为：软链接")
-        elif rmt_mode == "move":
-            print("默认文件转移模式为：移动")
-        elif rmt_mode == "rclone":
-            print("默认文件转移模式为：rclone移动")
-        elif rmt_mode == "rclonecopy":
-            print("默认文件转移模式为：rclone复制")
-        else:
-            print("默认文件转移模式为：复制")
-
-        search_indexer = Config().get_config('pt').get('search_indexer')
-        if search_indexer:
-            print("索引器设置为：%s" % search_indexer)
-
-        search_auto = Config().get_config('pt').get('search_auto')
-        if search_auto:
-            print("微信等移动端渠道搜索已开启自动择优下载")
-
-        ptsignin_cron = Config().get_config('pt').get('ptsignin_cron')
-        if not ptsignin_cron:
-            print("站点自动签到时间未配置，站点签到功能已关闭")
-
-        pt_check_interval = Config().get_config('pt').get('pt_check_interval')
-        if not pt_check_interval:
-            print("RSS订阅周期未配置，RSS订阅功能已关闭")
-
-        pt_monitor = Config().get_config('pt').get('pt_monitor')
-        if not pt_monitor:
-            print("下载软件监控未开启，下载器监控功能已关闭")
-    else:
-        print("配置文件格式错误，找不到pt配置项！")
-
-    # 检查Douban配置
-    if not Config().get_config('douban'):
-        print("豆瓣未配置")
-    else:
-        if not Config().get_config('douban').get('users') \
-                or not Config().get_config('douban').get('types') \
-                or not Config().get_config('douban').get('days'):
-            print("豆瓣配置不完整")
-
 
 def update_config():
     """
@@ -277,67 +227,6 @@ def update_config():
                 "season_banner": True,
                 "season_thumb": True}
         }
-        overwrite_cofig = True
-
-    # 下载目录配置初始化
-    if not _config.get('downloaddir'):
-        dl_client = _config.get('pt', {}).get('pt_client')
-        if dl_client and _config.get(dl_client):
-            save_path = _config.get(dl_client).get('save_path')
-            if not isinstance(save_path, dict):
-                save_path = {"movie": save_path,
-                             "tv": save_path, "anime": save_path}
-            container_path = _config.get(dl_client).get('save_containerpath')
-            if not isinstance(container_path, dict):
-                container_path = {"movie": container_path,
-                                  "tv": container_path, "anime": container_path}
-            downloaddir = []
-            type_dict = {"movie": "电影", "tv": "电视剧", "anime": "动漫"}
-            for mtype, path in save_path.items():
-                if not path:
-                    continue
-                save_dir = path.split('|')[0]
-                save_label = None
-                if len(path.split('|')) > 1:
-                    save_label = path.split('|')[1]
-                container_dir = container_path.get(mtype)
-                if save_dir:
-                    downloaddir.append({"save_path": save_dir,
-                                        "type": type_dict.get(mtype),
-                                        "category": "",
-                                        "container_path": container_dir,
-                                        "label": save_label})
-            _config['downloaddir'] = downloaddir
-        if _config.get('qbittorrent', {}).get('save_path'):
-            _config['qbittorrent'].pop('save_path')
-        if _config.get('qbittorrent', {}).get('save_containerpath'):
-            _config['qbittorrent'].pop('save_containerpath')
-        if _config.get('transmission', {}).get('save_path'):
-            _config['transmission'].pop('save_path')
-        if _config.get('transmission', {}).get('save_containerpath'):
-            _config['transmission'].pop('save_containerpath')
-        if _config.get('client115', {}).get('save_path'):
-            _config['client115'].pop('save_path')
-        if _config.get('client115', {}).get('save_containerpath'):
-            _config['client115'].pop('save_containerpath')
-        if _config.get('aria2', {}).get('save_path'):
-            _config['aria2'].pop('save_path')
-        if _config.get('aria2', {}).get('save_containerpath'):
-            _config['aria2'].pop('save_containerpath')
-        if _config.get('pikpak', {}).get('save_path'):
-            _config['pikpak'].pop('save_path')
-        if _config.get('pikpak', {}).get('save_containerpath'):
-            _config['pikpak'].pop('save_containerpath')
-        overwrite_cofig = True
-    elif isinstance(_config.get('downloaddir'), dict):
-        downloaddir_list = []
-        for path, attr in _config.get('downloaddir').items():
-            downloaddir_list.append({"save_path": path,
-                                     "type": attr.get("type"),
-                                     "category": attr.get("category"),
-                                     "container_path": attr.get("path"),
-                                     "label": attr.get("label")})
-        _config['downloaddir'] = downloaddir_list
         overwrite_cofig = True
 
     # 自定义识别词兼容旧配置

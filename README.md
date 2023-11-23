@@ -1,41 +1,15 @@
 ![logo-blue](https://user-images.githubusercontent.com/51039935/197520391-f35db354-6071-4c12-86ea-fc450f04bc85.png)
 # NAS媒体库资源归集、整理自动化工具
 
-[![GitHub stars](https://img.shields.io/github/stars/jxxghp/nas-tools?style=plastic)](https://github.com/jxxghp/nas-tools/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/jxxghp/nas-tools?style=plastic)](https://github.com/jxxghp/nas-tools/network/members)
-[![GitHub issues](https://img.shields.io/github/issues/jxxghp/nas-tools?style=plastic)](https://github.com/jxxghp/nas-tools/issues)
-[![GitHub license](https://img.shields.io/github/license/jxxghp/nas-tools?style=plastic)](https://github.com/jxxghp/nas-tools/blob/master/LICENSE.md)
-[![Docker pulls](https://img.shields.io/docker/pulls/jxxghp/nas-tools?style=plastic)](https://hub.docker.com/r/jxxghp/nas-tools)
-[![Platform](https://img.shields.io/badge/platform-amd64/arm64-pink?style=plastic)](https://hub.docker.com/r/jxxghp/nas-tools)
-
-
-Docker：https://hub.docker.com/repository/docker/jxxghp/nas-tools
-
-TG频道：https://t.me/nastool
-
-WIKI：https://github.com/jxxghp/nas-tools/wiki
-
-API: http://localhost:3000/api/v1/
-
 
 ## 功能：
 
 本软件的初衷是实现影视资源的自动化管理，释放双手、聚焦观影。需要有良好的网络环境及私有站点才能获得较好的使用体验。
 
-### 1、资源检索和订阅
-* 站点RSS聚合，想看的加入订阅，资源自动实时追新。
-* 通过微信、Telegram、Slack、Synology Chat或者WEB界面聚合资源搜索下载，最新热门资源一键搜索或者订阅。
-* 与豆瓣联动，在豆瓣中标记想看后台自动检索下载，未出全的自动加入订阅。
-
 ### 2、媒体库整理
 * 监控下载软件，下载完成后自动识别真实名称，硬链接到媒体库并重命名。
 * 对目录进行监控，文件变化时自动识别媒体信息硬链接到媒体库并重命名。
 * 解决保种与媒体库整理冲突的问题，专为中文环境优化，支持国产剧集和动漫，重命名准确率高，改名后Emby/Jellyfin/Plex完美刮削海报墙。
-
-### 3、站点养护
-* 全面的站点数据统计，实时监测你的站点流量情况。
-* 全自动化托管养站，支持远程下载器（本工具内建刷流功能仅为日常养站使用，如果追求数据建议使用更加强大的刷流工具：<a href="https://github.com/vertex-app/vertex" target="_blank">Vertex</a>）。
-* 站点每日自动登录保号。
 
 ### 4、消息服务
 * 支持微信、Telegram、Slack、Synology Chat、Bark、PushPlus、爱语飞飞等近十种渠道图文消息通知
@@ -46,32 +20,17 @@ API: http://localhost:3000/api/v1/
 ## 安装
 ### 1、Docker
 ```
-docker pull jxxghp/nas-tools:latest
+docker pull limy/nas-tools:latest
 ```
-教程见 [这里](docker/readme.md) 。
-
-如无法连接Github，注意不要开启自动更新开关(NASTOOL_AUTO_UPDATE=false)，将NASTOOL_CN_UPDATE设置为true可使用国内源加速安装依赖。
 
 ### 2、本地运行
 python3.10版本，需要预安装cython，如发现缺少依赖包需额外安装
 ```
-git clone -b master https://github.com/jxxghp/nas-tools --recurse-submodule 
+git clone -b master https://github.com/limy/nas-tools --recurse-submodule 
 python3 -m pip install -r requirements.txt
 export NASTOOL_CONFIG="/xxx/config/config.yaml"
 nohup python3 run.py & 
 ```
-
-### 3、Windows
-下载exe文件，双击运行即可，会自动生成配置文件目录
-
-https://github.com/jxxghp/nas-tools/releases
-
-### 4、群晖套件
-添加矿神群晖SPK套件源直接安装：
-
-https://spk.imnks.com/
-
-https://spk7.imnks.com/
 
 
 ## 配置
@@ -121,9 +80,6 @@ https://spk7.imnks.com/
    >> 综艺
    >> 儿童
 
-### 4、配置下载器及下载目录
-支持qbittorrent（推荐）、transmission、aria2、115网盘、pikpak网盘等，右上角按钮设置好下载目录。
-
 ### 5、配置同步目录
 * 目录同步可以对多个分散的文件夹进行监控，文件夹中有新增媒体文件时会自动进行识别重命名，并按配置的转移方式转移到媒体库目录或指定的目录中。
 * 如将下载软件的下载目录也纳入目录同步范围的，建议关闭下载软件监控功能，否则会触发重复处理。
@@ -166,13 +122,6 @@ https://spk7.imnks.com/
     3) 微信页面地址URL填写：http(s)://IP:PORT/wechat，点确定进行认证。
 
 
-  * 配置微信菜单控制
-  通过菜单远程控制工具运行，在https://work.weixin.qq.com/wework_admin/frame#apps 应用自定义菜单页面按如下图所示维护好菜单，菜单内容为发送消息，消息内容随意。
-
-   **一级菜单及一级菜单下的前几个子菜单顺序需要一模一样**，在符合截图的示例项后可以自己增加别的二级菜单项。
-
-   ![image](https://user-images.githubusercontent.com/54088512/215088822-b8353fa9-9569-4c96-a47e-e5ab387b1943.png)
-
 
 2) **Telegram Bot机器人**
 
@@ -186,31 +135,10 @@ https://spk7.imnks.com/
 
   * 详情参考频道说明
 
-  **命令与功能对应关系**
-
-   |  命令   | 功能 |
-   | ----  | ----  |
-   | /rss  | RSS订阅 |
-   | /ptt  | 下载文件转移 |
-   | /ptr  | 删种 |
-   | /pts | 站点签到 |
-   | /udt | 系统更新 |
-   | /rst  | 目录同步 |
-   | /db   | 豆瓣想看 |
 
 4) **Synology Chat**
 
   * 无需额外设置，注意非同一服务器搭建的，还需要在基础设置->安全中调整IP地址限制策略。
-
-### 6、配置索引器
-配置索引器，以支持搜索站点资源：
-  * 本工具内建索引器目前已支持大部分主流PT站点及部分公开站点，建议启用内建索引器。
-  * 同时支持Jackett/Prowlarr，需额外搭建对应服务并获取API Key以及地址等信息，配置到设置->索引器->Jackett/Prowlarr中。
-
-### 7、配置站点
-本工具的电影电视剧订阅、资源搜索、站点数据统计、刷流、自动签到等功能均依赖于正确配置站点信息，需要在“站点管理->站点维护”中维护好站点RSS链接以及Cookie等。
-
-其中站点RSS链接生成时请尽量选择影视类资源分类，且勾选副标题。
 
 ### 8、整理存量媒体资源
 如果你的存量资源所在的目录与你目录同步中配置的源路径目的路径相同，则可以通过WEBUI或微信/Telegram的“目录同步”按钮触发全量同步。 

@@ -7,13 +7,7 @@ class ModuleConf(object):
     # 菜单序号在https://work.weixin.qq.com/wework_admin/frame#apps 应用自定义菜单中维护，然后看日志输出的菜单序号是啥（按顺利能猜到的）....
     # 命令对应关系：/ptt 下载文件转移；/ptr 删种；/pts 站点签到；/rst 目录同步；/rss RSS下载；/udt 系统更新
     WECHAT_MENU = {
-        '_0_0': '/ptt',
-        '_0_1': '/ptr',
-        '_0_2': '/rss',
-        '_1_0': '/rst',
-        '_1_1': '/db',
-        '_2_0': '/pts',
-        '_2_1': '/udt'
+        '_1_0': '/rst'
     }
 
     # 全量转移模式
@@ -34,22 +28,6 @@ class ModuleConf(object):
         "link": RmtMode.LINK,
         "softlink": RmtMode.SOFTLINK,
         "move": RmtMode.MOVE
-    }
-
-    # 下载器
-    DOWNLOADER_DICT = {
-        "qbittorrent": DownloaderType.QB,
-        "transmission": DownloaderType.TR,
-        "client115": DownloaderType.Client115,
-        "aria2": DownloaderType.Aria2,
-        "pikpak": DownloaderType.PikPak
-    }
-
-    # 索引器
-    INDEXER_DICT = {
-        "prowlarr": IndexerType.PROWLARR,
-        "jackett": IndexerType.JACKETT,
-        "builtin": IndexerType.BUILTIN
     }
 
     # 媒体服务器
@@ -421,50 +399,6 @@ class ModuleConf(object):
         }
     }
 
-    # 自动删种配置
-    TORRENTREMOVER_DICT = {
-        "Qb": {
-            "name": "Qbittorrent",
-            "img_url": "../static/img/qbittorrent.png",
-            "downloader_type": DownloaderType.QB,
-            "torrent_state": {
-                "downloading": "正在下载_传输数据",
-                "stalledDL": "正在下载_未建立连接",
-                "uploading": "正在上传_传输数据",
-                "stalledUP": "正在上传_未建立连接",
-                "error": "暂停_发生错误",
-                "pausedDL": "暂停_下载未完成",
-                "pausedUP": "暂停_下载完成",
-                "missingFiles": "暂停_文件丢失",
-                "checkingDL": "检查中_下载未完成",
-                "checkingUP": "检查中_下载完成",
-                "checkingResumeData": "检查中_启动时恢复数据",
-                "forcedDL": "强制下载_忽略队列",
-                "queuedDL": "等待下载_排队",
-                "forcedUP": "强制上传_忽略队列",
-                "queuedUP": "等待上传_排队",
-                "allocating": "分配磁盘空间",
-                "metaDL": "获取元数据",
-                "moving": "移动文件",
-                "unknown": "未知状态",
-            }
-        },
-        "Tr": {
-            "name": "Transmission",
-            "img_url": "../static/img/transmission.png",
-            "downloader_type": DownloaderType.TR,
-            "torrent_state": {
-                "downloading": "正在下载",
-                "seeding": "正在上传",
-                "download_pending": "等待下载_排队",
-                "seed_pending": "等待上传_排队",
-                "checking": "正在检查",
-                "check_pending": "等待检查_排队",
-                "stopped": "暂停",
-            }
-        }
-    }
-
     # 搜索种子过滤属性
     TORRENT_SEARCH_PARAMS = {
         "restype": {
@@ -496,176 +430,6 @@ class ModuleConf(object):
         "qyapi.weixin.qq.com",
         "www.opensubtitles.org"
     ]
-
-    # 下载器
-    DOWNLOADER_CONF = {
-        "qbittorrent": {
-            "name": "Qbittorrent",
-            "img_url": "../static/img/qbittorrent.png",
-            "background": "bg-blue",
-            "test_command": "app.downloader.client.qbittorrent|Qbittorrent",
-            "config": {
-                "qbhost": {
-                    "id": "qbittorrent.qbhost",
-                    "required": True,
-                    "title": "IP地址",
-                    "tooltip": "配置IP地址，如为https则需要增加https://前缀",
-                    "type": "text",
-                    "placeholder": "127.0.0.1"
-                },
-                "qbport": {
-                    "id": "qbittorrent.qbport",
-                    "required": True,
-                    "title": "端口",
-                    "type": "text",
-                    "placeholder": "8080"
-                },
-                "qbusername": {
-                    "id": "qbittorrent.qbusername",
-                    "required": True,
-                    "title": "用户名",
-                    "type": "text",
-                    "placeholder": "admin"
-                },
-                "qbpassword": {
-                    "id": "qbittorrent.qbpassword",
-                    "required": False,
-                    "title": "密码",
-                    "type": "password",
-                    "placeholder": "adminadmin"
-                },
-                "force_upload": {
-                    "id": "qbittorrent.force_upload",
-                    "required": False,
-                    "title": "自动强制作种",
-                    "tooltip": "开启后下载文件转移完成时会自动将对应种子设置为强制做种状态，需在基础设置中开启下载软件监控功能",
-                    "type": "switch"
-                },
-                "auto_management": {
-                    "id": "qbittorrent.auto_management",
-                    "required": False,
-                    "title": "自动管理模式",
-                    "tooltip": "开启后下载目录将由Qbittorrent自动管理，不再使用NASTool传递的下载目录，需要同时在下载目录设置中配置好分类标签",
-                    "type": "switch"
-                }
-            }
-        },
-        "transmission": {
-            "name": "Transmission",
-            "img_url": "../static/img/transmission.png",
-            "background": "bg-danger",
-            "test_command": "app.downloader.client.transmission|Transmission",
-            "config": {
-                "trhost": {
-                    "id": "transmission.trhost",
-                    "required": True,
-                    "title": "IP地址",
-                    "tooltip": "配置IP地址，如为https则需要增加https://前缀",
-                    "type": "text",
-                    "placeholder": "127.0.0.1"
-                },
-                "trport": {
-                    "id": "transmission.trport",
-                    "required": True,
-                    "title": "端口",
-                    "type": "text",
-                    "placeholder": "9091"
-                },
-                "trusername": {
-                    "id": "transmission.trusername",
-                    "required": True,
-                    "title": "用户名",
-                    "type": "text",
-                    "placeholder": "admin"
-                },
-                "trpassword": {
-                    "id": "transmission.trpassword",
-                    "required": False,
-                    "title": "密码",
-                    "type": "password",
-                    "placeholder": ""
-                }
-            }
-        },
-        "client115": {
-            "name": "115网盘",
-            "img_url": "../static/img/115.jpg",
-            "background": "bg-azure",
-            "test_command": "app.downloader.client.client115|Client115",
-            "config": {
-                "cookie": {
-                    "id": "client115.cookie",
-                    "required": True,
-                    "title": "Cookie",
-                    "tooltip": "115网盘Cookie，通过115网盘网页端抓取Cookie",
-                    "type": "text",
-                    "placeholder": "USERSESSIONID=xxx;115_lang=zh;UID=xxx;CID=xxx;SEID=xxx"
-                }
-            }
-        },
-        "aria2": {
-            "name": "Aria2",
-            "img_url": "../static/img/aria2.png",
-            "background": "bg-green",
-            "test_command": "app.downloader.client.aria2|Aria2",
-            "config": {
-                "host": {
-                    "id": "aria2.host",
-                    "required": True,
-                    "title": "IP地址",
-                    "tooltip": "配置IP地址，如为https则需要增加https://前缀",
-                    "type": "text",
-                    "placeholder": "127.0.0.1"
-                },
-                "port": {
-                    "id": "aria2.port",
-                    "required": True,
-                    "title": "端口",
-                    "type": "text",
-                    "placeholder": "6800"
-                },
-                "secret": {
-                    "id": "aria2.secret",
-                    "required": True,
-                    "title": "令牌",
-                    "type": "text",
-                    "placeholder": ""
-                }
-            }
-        },
-        "pikpak": {
-            "name": "PikPak",
-            "img_url": "../static/img/pikpak.png",
-            "background": "bg-indigo",
-            "test_command": "app.downloader.client.pikpak|pikpak",
-            "config": {
-                "username": {
-                    "id": "pikpak.username",
-                    "required": True,
-                    "title": "用户名",
-                    "tooltip": "用户名",
-                    "type": "text",
-                    "placeholder": ""
-                },
-                "password": {
-                    "id": "pikpak.password",
-                    "required": True,
-                    "title": "密码",
-                    "tooltip": "密码",
-                    "type": "password",
-                    "placeholder": ""
-                },
-                "proxy": {
-                    "id": "pikpak.proxy",
-                    "required": False,
-                    "title": "代理",
-                    "tooltip": "如果需要代理才能访问pikpak可以在此处填入代理地址",
-                    "type": "text",
-                    "placeholder": "127.0.0.1:7890"
-                }
-            }
-        },
-    }
 
     # 媒体服务器
     MEDIASERVER_CONF = {
@@ -763,66 +527,6 @@ class ModuleConf(object):
                 }
             }
         },
-    }
-
-    # 索引器
-    INDEXER_CONF = {
-        "jackett": {
-            "name": "Jackett",
-            "img_url": "./static/img/jackett.png",
-            "background": "bg-black",
-            "test_command": "app.indexer.client.jackett|Jackett",
-            "config": {
-                "host": {
-                    "id": "jackett.host",
-                    "required": True,
-                    "title": "Jackett地址",
-                    "tooltip": "Jackett访问地址和端口，如为https需加https://前缀。注意需要先在Jackett中添加indexer，才能正常测试通过和使用",
-                    "type": "text",
-                    "placeholder": "http://127.0.0.1:9117"
-                },
-                "api_key": {
-                    "id": "jackett.api_key",
-                    "required": True,
-                    "title": "Api Key",
-                    "tooltip": "Jackett管理界面右上角复制API Key",
-                    "type": "text",
-                    "placeholder": ""
-                },
-                "password": {
-                    "id": "jackett.password",
-                    "required": False,
-                    "title": "密码",
-                    "tooltip": "Jackett管理界面中配置的Admin password，如未配置可为空",
-                    "type": "password",
-                    "placeholder": ""
-                }
-            }
-        },
-        "prowlarr": {
-            "name": "Prowlarr",
-            "img_url": "../static/img/prowlarr.png",
-            "background": "bg-orange",
-            "test_command": "app.indexer.client.prowlarr|Prowlarr",
-            "config": {
-                "host": {
-                    "id": "prowlarr.host",
-                    "required": True,
-                    "title": "Prowlarr地址",
-                    "tooltip": "Prowlarr访问地址和端口，如为https需加https://前缀。注意需要先在Prowlarr中添加搜刮器，同时勾选所有搜刮器后搜索一次，才能正常测试通过和使用",
-                    "type": "text",
-                    "placeholder": "http://127.0.0.1:9696"
-                },
-                "api_key": {
-                    "id": "prowlarr.api_key",
-                    "required": True,
-                    "title": "Api Key",
-                    "tooltip": "在Prowlarr->Settings->General->Security-> API Key中获取",
-                    "type": "text",
-                    "placeholder": ""
-                }
-            }
-        }
     }
 
     # 发现过滤器

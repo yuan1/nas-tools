@@ -1,6 +1,7 @@
 import os
 import re
 
+import log
 from config import RMT_MEDIAEXT
 from app.media.meta._base import MetaBase
 from app.utils import StringUtils
@@ -53,6 +54,7 @@ class MetaVideo(MetaBase):
         super().__init__(title, subtitle, fileflag)
         if not title:
             return
+        log.info("【MetaVideo】开始检索：%s ..." % title)
         original_title = title
         self._source = ""
         self._effect = []
