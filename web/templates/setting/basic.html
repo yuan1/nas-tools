@@ -501,17 +501,6 @@
               <div class="col-12 col-xl-3">
                 <div class="mb-3">
                   <label class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="laboratory.use_douban_titles" {% if
-                      Config.laboratory and Config.laboratory.use_douban_titles %}checked{% endif %}>
-                    <span class="form-check-label">使用豆瓣名称联想 <span class="form-help"
-                                                                          title="开启将使用豆瓣进行电影电视剧的名称联想，允许中文名不完整时自动联想，但如豆瓣数据与TMDB不一致时可能会无法搜索；关闭后使用TMDB的数据，对中文支持不友好，但不会有无法搜索的问题"
-                                                                          data-bs-toggle="tooltip">?</span></span>
-                  </label>
-                </div>
-              </div>
-              <div class="col-12 col-xl-3">
-                <div class="mb-3">
-                  <label class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="laboratory.search_en_title" {% if
                       Config.laboratory and Config.laboratory.search_en_title %}checked{% endif %}>
                     <span class="form-check-label">搜索优先使用英文名 <span class="form-help"

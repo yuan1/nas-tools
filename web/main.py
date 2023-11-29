@@ -103,14 +103,14 @@ def login():
         """
         # 判断当前的运营环境
         SystemFlag = SystemUtils.get_system()
-        SyncMod = Config().get_config('pt').get('rmt_mode')
+        SyncMod = Config().get_config('sync').get('sync_mod')
         TMDBFlag = 1 if Config().get_config('app').get('rmt_tmdbkey') else 0
         if not SyncMod:
             SyncMod = "link"
         RmtModeDict = WebAction().get_rmt_modes()
         RestypeDict = ModuleConf.TORRENT_SEARCH_PARAMS.get("restype")
         PixDict = ModuleConf.TORRENT_SEARCH_PARAMS.get("pix")
-        SearchSource = "douban" if Config().get_config("laboratory").get("use_douban_titles") else "tmdb"
+        SearchSource = "tmdb"
         CustomScriptCfg = SystemConfig().get_system_config("CustomScript")
         return render_template('navigation.html',
                                GoPage=GoPage,
@@ -961,7 +961,6 @@ def backup():
         table_list = [
             'SEARCH_RESULT_INFO',
             'RSS_TORRENTS',
-            'DOUBAN_MEDIAS',
             'TRANSFER_HISTORY',
             'TRANSFER_UNKNOWN',
             'TRANSFER_BLACKLIST',

@@ -3,7 +3,6 @@ import time
 from xml.dom import minidom
 
 import log
-from app.media.douban import DouBan
 from config import TMDB_IMAGE_W500_URL
 from app.utils import DomUtils, RequestUtils, ExceptionUtils
 from app.utils.types import MediaType
@@ -15,11 +14,9 @@ class Scraper:
 
     def __init__(self):
         self.media = Media()
-        self.douban = DouBan()
 
     def __gen_common_nfo(self,
                          tmdbinfo: dict,
-                         doubaninfo: dict,
                          scraper_nfo: dict,
                          doc,
                          root,
@@ -55,8 +52,6 @@ class Scraper:
         if scraper_nfo.get("credits"):
             # 导演
             directors, actors = self.media.get_tmdb_directors_actors(tmdbinfo=tmdbinfo)
-            if chinese:
-                directors, actors = self.__gen_people_chinese_info(directors, actors, doubaninfo)
             for director in directors:
                 xdirector = DomUtils.add_node(doc, root, "director", director.get("name") or "")
                 xdirector.setAttribute("tmdbid", str(director.get("id") or ""))
@@ -81,14 +76,12 @@ class Scraper:
 
     def gen_movie_nfo_file(self,
                            tmdbinfo: dict,
-                           doubaninfo: dict,
                            scraper_movie_nfo: dict,
                            out_path,
                            file_name):
         """
         生成电影的NFO描述文件
         :param tmdbinfo: TMDB元数据
-        :param doubaninfo: 豆瓣元数据
         :param scraper_movie_nfo: 刮削配置
         :param out_path: 电影根目录
         :param file_name: 电影文件名，不含后缀
@@ -99,7 +92,6 @@ class Scraper:
         root = DomUtils.add_node(doc, doc, "movie")
         # 公共部分
         doc = self.__gen_common_nfo(tmdbinfo=tmdbinfo,
-                                    doubaninfo=doubaninfo,
                                     scraper_nfo=scraper_movie_nfo,
                                     doc=doc,
                                     root=root,
@@ -119,13 +111,11 @@ class Scraper:
 
     def gen_tv_nfo_file(self,
                         tmdbinfo: dict,
-                        doubaninfo: dict,
                         scraper_tv_nfo: dict,
                         out_path):
         """
         生成电视剧的NFO描述文件
         :param tmdbinfo: TMDB元数据
-        :param doubaninfo: 豆瓣元数据
         :param scraper_tv_nfo: 刮削配置
         :param out_path: 电视剧根目录
         """
@@ -135,7 +125,6 @@ class Scraper:
         root = DomUtils.add_node(doc, doc, "tvshow")
         # 公共部分
         doc = self.__gen_common_nfo(tmdbinfo=tmdbinfo,
-                                    doubaninfo=doubaninfo,
                                     scraper_nfo=scraper_tv_nfo,
                                     doc=doc,
                                     root=root,
@@ -308,14 +297,8 @@ class Scraper:
                     return
                 #  nfo
                 if scraper_movie_nfo.get("basic") or scraper_movie_nfo.get("credits"):
-                    # 查询Douban信息
-                    if scraper_movie_nfo.get("credits") and scraper_movie_nfo.get("credits_chinese"):
-                        doubaninfo = self.douban.get_douban_info(media)
-                    else:
-                        doubaninfo = None
                     #  生成电影描述文件
                     self.gen_movie_nfo_file(tmdbinfo=media.tmdb_info,
-                                            doubaninfo=doubaninfo,
                                             scraper_movie_nfo=scraper_movie_nfo,
                                             out_path=dir_path,
                                             file_name=file_name)
@@ -362,13 +345,8 @@ class Scraper:
                 # 处理根目录
                 if not os.path.exists(os.path.join(os.path.dirname(dir_path), "tvshow.nfo")):
                     if scraper_tv_nfo.get("basic") or scraper_tv_nfo.get("credits"):
-                        # 查询Douban信息
-                        if scraper_tv_nfo.get("credits") and scraper_tv_nfo.get("credits_chinese"):
-                            doubaninfo = self.douban.get_douban_info(media)
-                        else:
-                            doubaninfo = None
                         # 根目录描述文件
-                        self.gen_tv_nfo_file(media.tmdb_info, doubaninfo, scraper_tv_nfo, os.path.dirname(dir_path))
+                        self.gen_tv_nfo_file(media.tmdb_info, scraper_tv_nfo, os.path.dirname(dir_path))
                     # poster
                     if scraper_tv_pic.get("poster"):
                         poster_image = media.get_poster_image(original=True)
@@ -458,59 +436,3 @@ class Scraper:
 
         except Exception as e:
             ExceptionUtils.exception_traceback(e)
-
-    def __gen_people_chinese_info(self, directors, actors, doubaninfo):
-        """
-        匹配豆瓣演职人员中文名
-        """
-        if doubaninfo:
-            directors_douban = doubaninfo.get("directors") or []
-            actors_douban = doubaninfo.get("actors") or []
-            # douban英文名姓和名分开匹配，（豆瓣中名前姓后，TMDB中不确定）
-            for director_douban in directors_douban:
-                if director_douban["latin_name"]:
-                    director_douban["latin_name"] = director_douban.get("latin_name", "").lower().split(" ")
-                else:
-                    director_douban["latin_name"] = director_douban.get("name", "").lower().split(" ")
-            for actor_douban in actors_douban:
-                if actor_douban["latin_name"]:
-                    actor_douban["latin_name"] = actor_douban.get("latin_name", "").lower().split(" ")
-                else:
-                    actor_douban["latin_name"] = actor_douban.get("name", "").lower().split(" ")
-            # 导演
-            if directors:
-                for director in directors:
-                    director_douban = self.__match_people_in_douban(director, directors_douban)
-                    if director_douban:
-                        director["name"] = director_douban.get("name")
-                    else:
-                        log.info("【Scraper】豆瓣该影片或剧集无导演 %s 信息" % director.get("name"))
-            # 演员
-            if actors:
-                for actor in actors:
-                    actor_douban = self.__match_people_in_douban(actor, actors_douban)
-                    if actor_douban:
-                        actor["name"] = actor_douban.get("name")
-                        if actor_douban.get("character") != "演员":
-                            actor["character"] = actor_douban.get("character")[2:]
-                    else:
-                        log.info("【Scraper】豆瓣该影片或剧集无演员 %s 信息" % actor.get("name"))
-        else:
-            log.info("【Scraper】豆瓣无该影片或剧集信息")
-        return directors, actors
-
-    def __match_people_in_douban(self, people, peoples_douban):
-        """
-        名字加又名构成匹配列表
-        """
-        people_aka_names = self.media.get_tmdbperson_aka_names(people.get("id")) or []
-        people_aka_names.append(people.get("name"))
-        for people_aka_name in people_aka_names:
-            for people_douban in peoples_douban:
-                latin_match_res = True
-                #  姓和名分开匹配
-                for latin_name in people_douban.get("latin_name"):
-                    latin_match_res = latin_match_res and (latin_name in people_aka_name.lower())
-                if latin_match_res or (people_douban.get("name") == people_aka_name):
-                    return people_douban
-        return None

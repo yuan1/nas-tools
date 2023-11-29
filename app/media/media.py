@@ -2077,13 +2077,11 @@ class Media:
     @staticmethod
     def get_detail_url(mtype, tmdbid):
         """
-        获取TMDB/豆瓣详情页地址
+        获取TMDB详情页地址
         """
         if not tmdbid:
             return ""
-        if str(tmdbid).startswith("DB:"):
-            return "https://movie.douban.com/subject/%s" % str(tmdbid).replace("DB:", "")
-        elif mtype == MediaType.MOVIE:
+        if mtype == MediaType.MOVIE:
             return "https://www.themoviedb.org/movie/%s" % tmdbid
         else:
             return "https://www.themoviedb.org/tv/%s" % tmdbid

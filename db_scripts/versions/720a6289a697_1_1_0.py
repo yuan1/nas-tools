@@ -103,11 +103,6 @@ def upgrade() -> None:
     except Exception as e:
         print(e)
     try:
-        with op.batch_alter_table("DOUBAN_MEDIAS") as batch_op:
-            batch_op.add_column(sa.Column('ADD_TIME', sa.Text, nullable=True))
-    except Exception as e:
-        print(str(e))
-    try:
         with op.batch_alter_table("SITE_BRUSH_TASK") as batch_op:
             batch_op.add_column(sa.Column('SENDMESSAGE', sa.Text, nullable=True))
             batch_op.add_column(sa.Column('FORCEUPLOAD', sa.Text, nullable=True))

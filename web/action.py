@@ -63,7 +63,6 @@ class WebAction:
             "delete_tmdb_cache": self.__delete_tmdb_cache,
             "modify_tmdb_cache": self.__modify_tmdb_cache,
             "truncate_blacklist": self.__truncate_blacklist,
-            "truncate_rsshistory": self.__truncate_rsshistory,
             "name_test": self.__name_test,
             "rule_test": self.__rule_test,
             "net_test": self.__net_test,
@@ -949,14 +948,6 @@ class WebAction:
         清空文件转移黑名单记录
         """
         self.dbhelper.truncate_transfer_blacklist()
-        return {"code": 0}
-
-    def __truncate_rsshistory(self, data):
-        """
-        清空RSS历史记录
-        """
-        self.dbhelper.truncate_rss_history()
-        self.dbhelper.truncate_rss_episodes()
         return {"code": 0}
 
     def __name_test(self, data):

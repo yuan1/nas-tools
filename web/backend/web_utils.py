@@ -1,6 +1,6 @@
 import cn2an
 
-from app.media import Media, Bangumi, DouBan
+from app.media import Media, Bangumi
 from app.media.meta import MetaInfo
 from app.utils import StringUtils, ExceptionUtils, SystemUtils, RequestUtils
 from app.utils.types import MediaType
@@ -58,25 +58,7 @@ class WebUtils:
         if not mediaid:
             return None
         media_info = None
-        if str(mediaid).startswith("DB:"):
-            # 豆瓣
-            doubanid = mediaid[3:]
-            info = DouBan().get_douban_detail(doubanid=doubanid, mtype=mtype)
-            if not info:
-                return None
-            title = info.get("title")
-            original_title = info.get("original_title")
-            year = info.get("year")
-            if original_title:
-                media_info = Media().get_media_info(title=f"{original_title} {year}",
-                                                    mtype=mtype,
-                                                    append_to_response="all")
-            if not media_info or not media_info.tmdb_info:
-                media_info = Media().get_media_info(title=f"{title} {year}",
-                                                    mtype=mtype,
-                                                    append_to_response="all")
-            media_info.douban_id = doubanid
-        elif str(mediaid).startswith("BG:"):
+        if str(mediaid).startswith("BG:"):
             # BANGUMI
             bangumiid = str(mediaid)[3:]
             info = Bangumi().detail(bid=bangumiid)
@@ -109,40 +91,27 @@ class WebUtils:
         """
         搜索TMDB或豆瓣词条
         :param: keyword 关键字
-        :param: source 渠道 tmdb/douban
+        :param: source 渠道 tmdb
         :param: season 季号
         :param: episode 集号
         """
         if not keyword:
             return []
         mtype, key_word, season_num, episode_num, _, content = StringUtils.get_keyword_from_string(keyword)
-        if source == "tmdb":
-            use_douban_titles = False
-        elif source == "douban":
-            use_douban_titles = True
-        else:
-            use_douban_titles = Config().get_config("laboratory").get("use_douban_titles")
-        if use_douban_titles:
-            medias = DouBan().search_douban_medias(keyword=key_word,
-                                                   mtype=mtype,
-                                                   season=season_num,
-                                                   episode=episode_num,
-                                                   page=page)
-        else:
-            meta_info = MetaInfo(title=content)
-            tmdbinfos = Media().get_tmdb_infos(title=meta_info.get_name(),
-                                               year=meta_info.year,
-                                               mtype=mtype,
-                                               page=page)
-            medias = []
-            for tmdbinfo in tmdbinfos:
-                tmp_info = MetaInfo(title=keyword)
-                tmp_info.set_tmdb_info(tmdbinfo)
-                if meta_info.type != MediaType.MOVIE and tmp_info.type == MediaType.MOVIE:
-                    continue
-                if tmp_info.begin_season:
-                    tmp_info.title = "%s 第%s季" % (tmp_info.title, cn2an.an2cn(meta_info.begin_season, mode='low'))
-                if tmp_info.begin_episode:
-                    tmp_info.title = "%s 第%s集" % (tmp_info.title, meta_info.begin_episode)
-                medias.append(tmp_info)
+        meta_info = MetaInfo(title=content)
+        tmdbinfos = Media().get_tmdb_infos(title=meta_info.get_name(),
+                                           year=meta_info.year,
+                                           mtype=mtype,
+                                           page=page)
+        medias = []
+        for tmdbinfo in tmdbinfos:
+            tmp_info = MetaInfo(title=keyword)
+            tmp_info.set_tmdb_info(tmdbinfo)
+            if meta_info.type != MediaType.MOVIE and tmp_info.type == MediaType.MOVIE:
+                continue
+            if tmp_info.begin_season:
+                tmp_info.title = "%s 第%s季" % (tmp_info.title, cn2an.an2cn(meta_info.begin_season, mode='low'))
+            if tmp_info.begin_episode:
+                tmp_info.title = "%s 第%s集" % (tmp_info.title, meta_info.begin_episode)
+            medias.append(tmp_info)
         return medias

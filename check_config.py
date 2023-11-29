@@ -150,7 +150,6 @@ def update_config():
         _config['laboratory'] = {
             'search_keyword': False,
             'tmdb_cache_expire': True,
-            'use_douban_titles': False,
             'search_en_title': True,
             'chrome_browser': False
         }
@@ -293,7 +292,7 @@ def update_config():
     # 目录同步兼容旧配置
     try:
         sync_paths = Config().get_config('sync').get('sync_path')
-        rmt_mode = Config().get_config('pt').get('sync_mod')
+        rmt_mode = Config().get_config('sync').get('sync_mod')
         if sync_paths:
             if isinstance(sync_paths, list):
                 for sync_items in sync_paths:
@@ -520,123 +519,6 @@ def update_config():
             if _config.get('message', {}).get('iyuu'):
                 _config['message'].pop('iyuu')
             overwrite_cofig = True
-    except Exception as e:
-        ExceptionUtils.exception_traceback(e)
-
-    # 站点兼容旧配置
-    try:
-        sites = _dbhelper.get_config_site()
-        for site in sites:
-            if not site.NOTE or str(site.NOTE).find('{') != -1:
-                continue
-            # 是否解析种子详情为|分隔的第1位
-            site_parse = str(site.NOTE).split("|")[0] or "Y"
-            # 站点过滤规则为|分隔的第2位
-            rule_groupid = str(site.NOTE).split("|")[1] if site.NOTE and len(
-                str(site.NOTE).split("|")) > 1 else ""
-            # 站点未读消息为|分隔的第3位
-            site_unread_msg_notify = str(site.NOTE).split("|")[2] if site.NOTE and len(
-                str(site.NOTE).split("|")) > 2 else "Y"
-            # 自定义UA为|分隔的第4位
-            ua = str(site.NOTE).split("|")[3] if site.NOTE and len(
-                str(site.NOTE).split("|")) > 3 else ""
-            # 是否开启浏览器仿真为|分隔的第5位
-            chrome = str(site.NOTE).split("|")[4] if site.NOTE and len(
-                str(site.NOTE).split("|")) > 4 else "N"
-            # 是否使用代理为|分隔的第6位
-            proxy = str(site.NOTE).split("|")[5] if site.NOTE and len(
-                str(site.NOTE).split("|")) > 5 else "N"
-            _dbhelper.update_config_site_note(tid=site.ID, note=json.dumps({
-                "parse": site_parse,
-                "rule": rule_groupid,
-                "message": site_unread_msg_notify,
-                "ua": ua,
-                "chrome": chrome,
-                "proxy": proxy
-            }))
-
-    except Exception as e:
-        ExceptionUtils.exception_traceback(e)
-
-    # 订阅兼容旧配置
-    try:
-        def __parse_rss_desc(desc):
-            rss_sites = []
-            search_sites = []
-            over_edition = False
-            restype = None
-            pix = None
-            team = None
-            rule = None
-            total = None
-            current = None
-            notes = str(desc).split('#')
-            # 订阅站点
-            if len(notes) > 0:
-                if notes[0]:
-                    rss_sites = [s for s in str(notes[0]).split(
-                        '|') if s and len(s) < 20]
-            # 搜索站点
-            if len(notes) > 1:
-                if notes[1]:
-                    search_sites = [s for s in str(notes[1]).split('|') if s]
-            # 洗版
-            if len(notes) > 2:
-                over_edition = notes[2]
-            # 过滤条件
-            if len(notes) > 3:
-                if notes[3]:
-                    filters = notes[3].split('@')
-                    if len(filters) > 0:
-                        restype = filters[0]
-                    if len(filters) > 1:
-                        pix = filters[1]
-                    if len(filters) > 2:
-                        rule = int(
-                            filters[2]) if filters[2].isdigit() else None
-                    if len(filters) > 3:
-                        team = filters[3]
-            # 总集数及当前集数
-            if len(notes) > 4:
-                if notes[4]:
-                    ep_info = notes[4].split('@')
-                    if len(ep_info) > 0:
-                        total = int(ep_info[0]) if ep_info[0] else None
-                    if len(ep_info) > 1:
-                        current = int(ep_info[1]) if ep_info[1] else None
-            return {
-                "rss_sites": rss_sites,
-                "search_sites": search_sites,
-                "over_edition": over_edition,
-                "restype": restype,
-                "pix": pix,
-                "team": team,
-                "rule": rule,
-                "total": total,
-                "current": current
-            }
-
-        # 电影订阅
-        rss_movies = _dbhelper.get_rss_movies()
-        for movie in rss_movies:
-            if not movie.DESC or str(movie.DESC).find('#') == -1:
-                continue
-            # 更新到具体字段
-            _dbhelper.update_rss_movie_desc(
-                rid=movie.ID,
-                desc=json.dumps(__parse_rss_desc(movie.DESC))
-            )
-        # 电视剧订阅
-        rss_tvs = _dbhelper.get_rss_tvs()
-        for tv in rss_tvs:
-            if not tv.DESC or str(tv.DESC).find('#') == -1:
-                continue
-            # 更新到具体字段
-            _dbhelper.update_rss_tv_desc(
-                rid=tv.ID,
-                desc=json.dumps(__parse_rss_desc(tv.DESC))
-            )
-
     except Exception as e:
         ExceptionUtils.exception_traceback(e)
 

@@ -149,7 +149,7 @@ class FileTransfer:
                 if len(tv_formats) > 2:
                     self._tv_season_rmt_format = tv_formats[-2]
                     self._tv_file_rmt_format = tv_formats[-1]
-        self._default_rmt_mode = ModuleConf.RMT_MODES.get(Config().get_config('pt').get('rmt_mode', 'copy'),
+        self._default_rmt_mode = ModuleConf.RMT_MODES.get(Config().get_config('sync').get('sync_mod', 'copy'),
                                                           RmtMode.COPY)
 
     @staticmethod

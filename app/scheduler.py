@@ -18,17 +18,13 @@ from web.backend.wallpaper import get_login_wallpaper
 @singleton
 class Scheduler:
     SCHEDULER = None
-    _pt = None
-    _douban = None
     _media = None
 
     def __init__(self):
         self.init_config()
 
     def init_config(self):
-        self._pt = Config().get_config('pt')
         self._media = Config().get_config('media')
-        self._douban = Config().get_config('douban')
 
     def run_service(self):
         """
