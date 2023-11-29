@@ -32,8 +32,7 @@ export class LayoutSearchbar extends CustomElement {
           <!-- 导航展开按钮 -->
           <layout-navbar-button></layout-navbar-button>
           <!-- 搜索栏 -->
-          <div class="input-group input-group-flat mx-2">
-            <h2 class="page-title">我的媒体库</h2>
+          <div class="input-group input-group-flat mx-2">          
           </div>
           <!-- 头像 -->
           <div class="nav-item dropdown me-2">

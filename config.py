@@ -78,7 +78,6 @@ KEYWORD_BLACKLIST = ['中字', '韩语', '双字', '中英', '日语', '双语',
 # WebDriver路径
 WEBDRIVER_PATH = {
     "Docker": "/usr/lib/chromium/chromedriver",
-    "Windows": "D:/App/chromedriver-win64/chromedriver.exe",
     "Synology": "/var/packages/NASTool/target/bin/chromedriver"
 }
 
@@ -112,7 +111,6 @@ class Config(object):
     _config_path = None
 
     def __init__(self):
-        os.environ["NASTOOL_CONFIG"] = "D:/Code\PycharmProjects/nas-tools/config/config.yaml"
         self._config_path = os.environ.get('NASTOOL_CONFIG')
         if not os.environ.get('TZ'):
             os.environ['TZ'] = 'Asia/Shanghai'
