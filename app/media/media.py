@@ -2046,17 +2046,6 @@ class Media:
         meta_info = MetaInfo(title=file_name)
         self.__insert_media_cache(self.__make_cache_key(meta_info), cache_info)
 
-    @staticmethod
-    def merge_media_info(target, source):
-        """
-        将soruce中有效的信息合并到target中并返回
-        """
-        target.set_tmdb_info(source.tmdb_info)
-        target.fanart_poster = source.get_poster_image()
-        target.fanart_backdrop = source.get_backdrop_image()
-        target.set_download_info(download_setting=source.download_setting,
-                                 save_path=source.save_path)
-        return target
 
     def get_tmdbid_by_imdbid(self, imdbid):
         """

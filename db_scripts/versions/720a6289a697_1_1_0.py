@@ -27,46 +27,6 @@ def upgrade() -> None:
             batch_op.alter_column('OFFSET', type_=sa.Text, existing_type=sa.Integer)
     except Exception as e:
         print(str(e))
-    # 1.0.1
-    try:
-        with op.batch_alter_table("CONFIG_USER_RSS") as batch_op:
-            batch_op.add_column(sa.Column('SAVE_PATH', sa.Text))
-            batch_op.add_column(sa.Column('DOWNLOAD_SETTING', sa.Integer))
-    except Exception as e:
-        print(str(e))
-    # 1.0.2
-    try:
-        with op.batch_alter_table("RSS_MOVIES") as batch_op:
-            batch_op.add_column(sa.Column('RSS_SITES', sa.Text))
-            batch_op.add_column(sa.Column('SEARCH_SITES', sa.Text))
-            batch_op.add_column(sa.Column('OVER_EDITION', sa.Integer))
-            batch_op.add_column(sa.Column('FILTER_RESTYPE', sa.Text))
-            batch_op.add_column(sa.Column('FILTER_PIX', sa.Text))
-            batch_op.add_column(sa.Column('FILTER_RULE', sa.Integer))
-            batch_op.add_column(sa.Column('FILTER_TEAM', sa.Text))
-            batch_op.add_column(sa.Column('SAVE_PATH', sa.Text))
-            batch_op.add_column(sa.Column('DOWNLOAD_SETTING', sa.Integer))
-            batch_op.add_column(sa.Column('FUZZY_MATCH', sa.Integer))
-            batch_op.add_column(sa.Column('NOTE', sa.Text))
-    except Exception as e:
-        print(str(e))
-    try:
-        with op.batch_alter_table("RSS_TVS") as batch_op:
-            batch_op.add_column(sa.Column('RSS_SITES', sa.Text))
-            batch_op.add_column(sa.Column('SEARCH_SITES', sa.Text))
-            batch_op.add_column(sa.Column('OVER_EDITION', sa.Integer))
-            batch_op.add_column(sa.Column('FILTER_RESTYPE', sa.Text))
-            batch_op.add_column(sa.Column('FILTER_PIX', sa.Text))
-            batch_op.add_column(sa.Column('FILTER_RULE', sa.Integer))
-            batch_op.add_column(sa.Column('FILTER_TEAM', sa.Text))
-            batch_op.add_column(sa.Column('SAVE_PATH', sa.Text))
-            batch_op.add_column(sa.Column('DOWNLOAD_SETTING', sa.Integer))
-            batch_op.add_column(sa.Column('FUZZY_MATCH', sa.Integer))
-            batch_op.add_column(sa.Column('TOTAL_EP', sa.Integer))
-            batch_op.add_column(sa.Column('CURRENT_EP', sa.Integer))
-            batch_op.add_column(sa.Column('NOTE', sa.Text))
-    except Exception as e:
-        print(str(e))
     # 1.0.3
     try:
         with op.batch_alter_table("TRANSFER_HISTORY") as batch_op:
@@ -78,64 +38,10 @@ def upgrade() -> None:
             batch_op.add_column(sa.Column('DEST_FILENAME', sa.Text))
     except Exception as e:
         print(str(e))
-    try:
-        with op.batch_alter_table("DOWNLOAD_SETTING") as batch_op:
-            batch_op.add_column(sa.Column('DOWNLOADER', sa.Text))
-    except Exception as e:
-        print(str(e))
     # 1.0.7
     try:
         with op.batch_alter_table("TRANSFER_UNKNOWN") as batch_op:
             batch_op.add_column(sa.Column('MODE', sa.Text, nullable=True))
-    except Exception as e:
-        print(str(e))
-    # 1.0.8
-    try:
-        with op.batch_alter_table("CONFIG_USER_RSS") as batch_op:
-            batch_op.add_column(sa.Column('RECOGNIZATION', sa.Text, nullable=True))
-            batch_op.add_column(sa.Column('MEDIAINFOS', sa.Text, nullable=True))
-    except Exception as e:
-        print(str(e))
-    # 1.0.9
-    try:
-        with op.batch_alter_table("SITE_USER_INFO_STATS") as batch_op:
-            batch_op.drop_column('FAVICON')
-    except Exception as e:
-        print(e)
-    try:
-        with op.batch_alter_table("SITE_BRUSH_TASK") as batch_op:
-            batch_op.add_column(sa.Column('SENDMESSAGE', sa.Text, nullable=True))
-            batch_op.add_column(sa.Column('FORCEUPLOAD', sa.Text, nullable=True))
-    except Exception as e:
-        print(str(e))
-    # 1.0.10
-    try:
-        with op.batch_alter_table("RSS_MOVIES") as batch_op:
-            batch_op.add_column(sa.Column('FILTER_ORDER', sa.Integer, nullable=True))
-    except Exception as e:
-        print(str(e))
-    try:
-        with op.batch_alter_table("RSS_TVS") as batch_op:
-            batch_op.add_column(sa.Column('FILTER_ORDER', sa.Integer, nullable=True))
-    except Exception as e:
-        print(str(e))
-    # 1.0.11
-    try:
-        with op.batch_alter_table("RSS_MOVIES") as batch_op:
-            batch_op.add_column(sa.Column('KEYWORD', sa.Text, nullable=True))
-    except Exception as e:
-        print(str(e))
-    try:
-        with op.batch_alter_table("RSS_TVS") as batch_op:
-            batch_op.add_column(sa.Column('KEYWORD', sa.Text, nullable=True))
-    except Exception as e:
-        print(str(e))
-    # 1.0.12
-    try:
-        with op.batch_alter_table("CONFIG_USER_RSS") as batch_op:
-            batch_op.add_column(sa.Column('OVER_EDITION', sa.Integer, nullable=True))
-            batch_op.add_column(sa.Column('SITES', sa.Text, nullable=True))
-            batch_op.add_column(sa.Column('FILTER_ARGS', sa.Text, nullable=True))
     except Exception as e:
         print(str(e))
     # ### end Alembic commands ###

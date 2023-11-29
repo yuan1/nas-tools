@@ -563,13 +563,6 @@ class MetaBase(object):
         if over_edition is not None:
             self.over_edition = over_edition
 
-    # 整合下载参数
-    def set_download_info(self, download_setting=None, save_path=None):
-        if download_setting:
-            self.download_setting = download_setting
-        if save_path:
-            self.save_path = save_path
-
     # 判断电视剧是否为动漫
     def __get_tmdb_type(self, info):
         if not info:
